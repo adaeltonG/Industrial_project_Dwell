@@ -21,10 +21,7 @@ export default function HomePage() {
         </div>
 
         <section className="hero">
-          <p className="badge">
-            <span className="desktop-copy">MULTI-VENDOR MARKETPLACE</span>
-            <span className="mobile-copy">MULTI-VENDOR</span>
-          </p>
+      
           <h1>Find it. Compare it. Buy with confidence.</h1>
           <p>
             Search, compare and shop products from hundreds of independent vendors

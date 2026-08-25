@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ProductAvailability {
+  IN_STOCK
+  OUT_OF_STOCK
+  PREORDER
+}
+
+model User {
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String
+  email         String         @unique
+  passwordHash  String         @map("password_hash")
+  role          UserRole       @default(USER)
+  savedProducts SavedProduct[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Vendor {
+  id            String    @id @default(uuid()) @db.Uuid
+  slug          String    @unique
+  name          String    @unique
+  description   String
+  websiteUrl    String    @map("website_url")
+  logoUrl       String?   @map("logo_url")
+  verifiedSince DateTime? @db.Date @map("verified_since")
+  products      Product[]
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("vendors")
+}
+
+model Category {
+  id          String    @id @default(uuid()) @db.Uuid
+  slug        String    @unique
+  name        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model Product {
+  id               String              @id @default(uuid()) @db.Uuid
+  slug             String              @unique
+  title            String
+  shortTitle       String              @map("short_title")
+  description      String
+  shortDescription String              @map("short_description")
+  price            Decimal             @db.Decimal(10, 2)
+  currency         String              @default("GBP") @db.Char(3)
+  availability     ProductAvailability @default(IN_STOCK)
+  imageUrl         String?             @map("image_url")
+  externalUrl      String              @map("external_url")
+  vendorId         String              @db.Uuid @map("vendor_id")
+  categoryId       String              @db.Uuid @map("category_id")
+  vendor           Vendor              @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  category         Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  savedBy          SavedProduct[]
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  @@index([vendorId])
+  @@index([categoryId])
+  @@index([title])
+  @@map("products")
+}
+
+model SavedProduct {
+  userId    String   @db.Uuid @map("user_id")
+  productId String   @db.Uuid @map("product_id")
+  savedAt   DateTime @default(now()) @map("saved_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@index([productId])
+  @@map("saved_products")
+}
