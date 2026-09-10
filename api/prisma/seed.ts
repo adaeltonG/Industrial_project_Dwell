@@ -54,10 +54,11 @@ async function main() {
 
   const email = (process.env.ADMIN_EMAIL ?? "admin@dwell.local").toLowerCase();
   const password = process.env.ADMIN_PASSWORD ?? "change-this-admin-password";
+  const passwordHash = await bcrypt.hash(password, 12);
   await prisma.user.upsert({
     where: { email },
-    update: { role: UserRole.ADMIN },
-    create: { name: "Dwell Admin", email, passwordHash: await bcrypt.hash(password, 12), role: UserRole.ADMIN }
+    update: { name: "Dwell Admin", passwordHash, role: UserRole.ADMIN },
+    create: { name: "Dwell Admin", email, passwordHash, role: UserRole.ADMIN }
   });
 }
 

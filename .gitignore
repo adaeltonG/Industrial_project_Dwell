@@ -3,6 +3,8 @@ node_modules/
 out/
 dist/
 coverage/
+tmp/
+*.tsbuildinfo
 .DS_Store
 .env*
 npm-debug.log*

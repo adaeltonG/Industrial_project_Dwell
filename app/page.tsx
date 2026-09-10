@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { categories } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { apiRequest, type Category } from "@/lib/api";
 import { CategoryCard } from "@/components/CategoryCard";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -12,6 +15,15 @@ const reasons = [
 ];
 
 export default function HomePage() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiRequest<Category[]>("/categories").then(setCategories).catch((reason) => {
+      setError(reason instanceof Error ? reason.message : "Could not load categories");
+    });
+  }, []);
+
   return (
     <>
       <Header />
@@ -39,12 +51,14 @@ export default function HomePage() {
           </div>
           <div className="category-grid">
             {categories.map((category) => (
-              <CategoryCard key={category.title} category={category} />
+              <CategoryCard key={category.id} category={category} />
             ))}
           </div>
+          {error ? <p className="form-error" role="alert">{error}</p> : null}
+          {!error && categories.length === 0 ? <p className="empty-note">Loading categories…</p> : null}
         </section>
 
-        <section className="trust-panel">
+        <section className="trust-panel" id="about">
           <h2>Why shop with Dwell</h2>
           <ul>
             {reasons.map((reason) => (
