@@ -4,9 +4,9 @@ This document records automated developer checks. It is **not** evidence of usab
 
 | Check | Result | Scope |
 | --- | --- | --- |
-| Frontend unit tests | 5 passed | Cart persistence, quantities, currency and totals |
+| Frontend unit tests | 8 passed | Cart persistence, quantities, currency, totals, all 30 local PNGs, stock provenance and PNG ERD |
 | API HTTP tests | 39 passed | Both API prefixes, UUID/slug lookup, password hashing, registration/login, role protection, CRUD, filters and validation |
-| PostgreSQL integration | 47 checks passed | Real migrations, 30 products / 5 vendors / 4 categories, repeatable seed preserving edits/passwords, persisted CRUD, auth, favourites, filtering, sorting and pagination |
+| PostgreSQL integration | 51 checks passed | Real migrations, 30 products / 5 vendors / 4 categories, local image URLs, placeholder/null image backfill, repeatable seed preserving custom images/edits/passwords, persisted CRUD, auth, favourites, filtering, sorting and pagination |
 | Marketplace browser flow | Passed | Homepage, search, filters, sorting, card fields, detail/vendor links, mobile pages, registration, protected admin access, create/edit/delete forms |
 | Shopping browser regression | Passed | Existing product images, cart, checkout simulation, price/stock/API failures, mobile layout and browser errors |
 | Frontend production build | Passed on Windows and Linux | Next.js compilation, types and page generation |
@@ -35,4 +35,4 @@ Compatible dependency fixes update the frontend lockfile to Next.js 16.3.4; its 
 
 JWTs are stored in localStorage by the existing frontend. The API verifies bearer tokens and roles, hashes passwords with bcrypt, and does not return password hashes. These checks verify the assignment requirements; they are not a penetration test.
 
-Seed records are fictional demonstration inventory. New products use labelled placeholder images and example.com external links. Existing product edits and admin credentials are preserved when seeding. Five-person usability testing has deliberately not been claimed or fabricated.
+Seed records are fictional demonstration inventory with example.com external links. All 30 products have local PNG assets: the original seven, 12 additional generated images and 11 downloaded stock photographs. Image provenance is recorded in `public/images/products/README.md` and `stock-sources.json`. These are illustrative assets, not verified vendor inventory photographs. The seed repairs known placeholders and missing image URLs while preserving custom images, other product edits and admin credentials. Five-person usability testing has deliberately not been claimed or fabricated.

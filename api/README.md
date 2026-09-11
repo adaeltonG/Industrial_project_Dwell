@@ -57,7 +57,7 @@ Both `/api` (the assignment contract) and `/api/v1` (existing client compatibili
 
 ## Schema design
 
-See [database schema, ER diagram and naming decisions](../docs/database-design.md). Table names and columns are unchanged; no rename migration is needed. The additive seed contains 30 products and five vendors and preserves existing data. Provide `ADMIN_PASSWORD` with at least 12 characters to create a missing administrator; seeding never resets existing passwords. Seed vendors/products are fictional and use example.com links and demonstration images.
+See [database schema, PNG ER diagram and naming decisions](../docs/database-design.md). Table names and columns are unchanged; no rename migration is needed. The seed contains 30 products and five vendors. It preserves existing data while backfilling missing/legacy placeholder image URLs with bundled photographs. Custom administrator image URLs are preserved. Provide `ADMIN_PASSWORD` with at least 12 characters to create a missing administrator; seeding never resets existing passwords. Seed vendors/products are fictional and use example.com links and illustrative images.
 
 The schema is in third normal form: category and vendor attributes exist once and products reference them by foreign key; saved products are represented by a composite-key join table; product counts and vendor display metadata are computed from relational data instead of stored redundantly. Money uses PostgreSQL `decimal(10,2)`.
 

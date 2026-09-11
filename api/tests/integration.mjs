@@ -26,13 +26,24 @@ try {
   check(await db.product.count() === 30, "Seed creates 30 products");
   check(await db.vendor.count() === 5, "Seed creates five vendors");
   check(await db.category.count() === 4, "Seed creates four categories");
+  check((await db.product.findMany()).every((product) => product.imageUrl?.endsWith(`/images/products/${product.slug}.png`)), "Every seeded product has its own bundled image URL");
   const original = await db.product.findFirstOrThrow();
   const admin = await db.user.findUniqueOrThrow({ where: { email } });
-  await db.product.update({ where: { id: original.id }, data: { price: 123.45 } });
+  await db.product.update({ where: { id: original.id }, data: { price: 123.45, imageUrl: "https://example.com/custom-admin-image.png" } });
+  const mug = await db.product.findUniqueOrThrow({ where: { slug: "stoneware-mug" } });
+  // Select another new product if the first product returned above was the mug.
+  const backfillTarget = mug.id === original.id
+    ? await db.product.findUniqueOrThrow({ where: { slug: "cotton-table-runner" } }) : mug;
+  await db.product.update({ where: { id: backfillTarget.id }, data: { imageUrl: `https://placehold.co/640x480/f1f3ec/344538/png?text=${encodeURIComponent(backfillTarget.title)}` } });
   seed();
   check(await db.product.count() === 30, "Seed is idempotent");
   check((await db.product.findUniqueOrThrow({ where: { id: original.id } })).price.toFixed(2) === "123.45", "Seed preserves edited products");
   check((await db.user.findUniqueOrThrow({ where: { email } })).passwordHash === admin.passwordHash, "Seed preserves admin password hash");
+  check((await db.product.findUniqueOrThrow({ where: { id: original.id } })).imageUrl === "https://example.com/custom-admin-image.png", "Seed preserves administrator image overrides");
+  check((await db.product.findUniqueOrThrow({ where: { id: backfillTarget.id } })).imageUrl?.endsWith(`/images/products/${backfillTarget.slug}.png`), "Seed replaces legacy placeholder image URLs");
+  await db.product.update({ where: { id: backfillTarget.id }, data: { imageUrl: null } });
+  seed();
+  check((await db.product.findUniqueOrThrow({ where: { id: backfillTarget.id } })).imageUrl?.endsWith(`/images/products/${backfillTarget.slug}.png`), "Seed backfills missing image URLs");
 
   const registered = await request(app).post("/api/auth/register").send({ name: "Verification User", email: "verification-user@example.com", password, role: "ADMIN" });
   check(registered.status === 201 && registered.body.data.user.role === "USER", "Registration cannot escalate role");

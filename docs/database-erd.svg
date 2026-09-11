@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+  <title>Dwell database entity relationship diagram</title>
+  <desc>PostgreSQL schema with users, vendors, categories, products and saved products. Every product has one vendor and one category. Users and products are linked by saved_products.</desc>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #233a2d; }
+    .main { font-size: 38px; font-weight: 700; }
+    .subtitle { font-size: 19px; fill: #5c6e61; }
+    .title { fill: white; font-size: 25px; font-weight: 700; }
+    .heading { font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+    .field { font-family: Consolas, monospace; font-size: 16px; }
+    .type { font-size: 15px; fill: #5c6e61; }
+    .key { font-size: 12px; font-weight: 700; fill: #277345; }
+    .relation { font-size: 17px; font-weight: 700; paint-order: stroke; stroke: #fafbf8; stroke-width: 6px; stroke-linejoin: round; }
+    .note { font-size: 17px; }
+  </style>
+  <rect width="1800" height="1120" fill="#fafbf8"/>
+  <text x="50" y="65" class="main" >Dwell | Database entity relationship diagram</text>
+  <text x="50" y="103" class="subtitle" >PostgreSQL · Physical table and column names · Generated from api/prisma/schema.prisma</text>
+  <path d="M470 188H545V591H650" fill="none" stroke="#42715a" stroke-width="2.5" stroke-linejoin="round"/><text x="485" y="178" class="relation" >1</text><text x="595" y="579" class="relation" >0..*</text><text x="495" y="400" class="relation" >supplies</text>
+  <path d="M470 678H580V621H650" fill="none" stroke="#42715a" stroke-width="2.5" stroke-linejoin="round"/><text x="485" y="667" class="relation" >1</text><text x="595" y="609" class="relation" >0..*</text><text x="485" y="710" class="relation" >classifies</text>
+  <path d="M1190 261H1245V851H1330" fill="none" stroke="#42715a" stroke-width="2.5" stroke-linejoin="round"/><text x="1205" y="249" class="relation" >1</text><text x="1275" y="839" class="relation" >0..*</text><text x="1205" y="580" class="relation" >saved by</text>
+  <path d="M1540 456V720" fill="none" stroke="#42715a" stroke-width="2.5" stroke-linejoin="round"/><text x="1552" y="480" class="relation" >1</text><text x="1552" y="705" class="relation" >0..*</text><text x="1555" y="590" class="relation" >saves</text>
+  <g transform="translate(50,160)">
+    <rect width="420" height="356" rx="12" fill="white" stroke="#bfd2c7" stroke-width="2"/>
+    <path d="M12 0H408Q420 0 420 12V54H0V12Q0 0 12 0" fill="#254e3a"/>
+    <text x="20" y="35" class="title" >vendors</text>
+    <rect y="54" width="420" height="32" fill="#e9f0eb"/>
+    <text x="16" y="76" class="heading" >KEY</text><text x="82" y="76" class="heading" >COLUMN</text><text x="245" y="76" class="heading" >TYPE</text>
+    <g transform="translate(0,86)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >PK</text><text x="82" y="21" class="field" >id</text><text x="245" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,116)">
+      
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >slug</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,146)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >name</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,176)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >description</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,206)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >website_url</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,236)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >logo_url</text><text x="245" y="21" class="type" >text ?</text>
+    </g><g transform="translate(0,266)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >verified_since</text><text x="245" y="21" class="type" >date ?</text>
+    </g><g transform="translate(0,296)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >created_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g><g transform="translate(0,326)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >updated_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g>
+  </g><g transform="translate(50,650)">
+    <rect width="420" height="266" rx="12" fill="white" stroke="#bfd2c7" stroke-width="2"/>
+    <path d="M12 0H408Q420 0 420 12V54H0V12Q0 0 12 0" fill="#254e3a"/>
+    <text x="20" y="35" class="title" >categories</text>
+    <rect y="54" width="420" height="32" fill="#e9f0eb"/>
+    <text x="16" y="76" class="heading" >KEY</text><text x="82" y="76" class="heading" >COLUMN</text><text x="245" y="76" class="heading" >TYPE</text>
+    <g transform="translate(0,86)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >PK</text><text x="82" y="21" class="field" >id</text><text x="245" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,116)">
+      
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >slug</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,146)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >name</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,176)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >description</text><text x="245" y="21" class="type" >text ?</text>
+    </g><g transform="translate(0,206)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >created_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g><g transform="translate(0,236)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >updated_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g>
+  </g><g transform="translate(650,160)">
+    <rect width="540" height="536" rx="12" fill="white" stroke="#bfd2c7" stroke-width="2"/>
+    <path d="M12 0H528Q540 0 540 12V54H0V12Q0 0 12 0" fill="#254e3a"/>
+    <text x="20" y="35" class="title" >products</text>
+    <rect y="54" width="540" height="32" fill="#e9f0eb"/>
+    <text x="16" y="76" class="heading" >KEY</text><text x="82" y="76" class="heading" >COLUMN</text><text x="300" y="76" class="heading" >TYPE</text>
+    <g transform="translate(0,86)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >PK</text><text x="82" y="21" class="field" >id</text><text x="300" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,116)">
+      
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >slug</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,146)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >title</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,176)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >short_title</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,206)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >description</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,236)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >short_description</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,266)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >price</text><text x="300" y="21" class="type" >decimal(10,2)</text>
+    </g><g transform="translate(0,296)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >currency</text><text x="300" y="21" class="type" >char(3)</text>
+    </g><g transform="translate(0,326)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >availability</text><text x="300" y="21" class="type" >ProductAvailability</text>
+    </g><g transform="translate(0,356)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >image_url</text><text x="300" y="21" class="type" >text ?</text>
+    </g><g transform="translate(0,386)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >external_url</text><text x="300" y="21" class="type" >text</text>
+    </g><g transform="translate(0,416)">
+      
+      <text x="16" y="21" class="key" >FK</text><text x="82" y="21" class="field" >vendor_id</text><text x="300" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,446)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >FK</text><text x="82" y="21" class="field" >category_id</text><text x="300" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,476)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >created_at</text><text x="300" y="21" class="type" >timestamp</text>
+    </g><g transform="translate(0,506)">
+      <rect x="1" width="538" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >updated_at</text><text x="300" y="21" class="type" >timestamp</text>
+    </g>
+  </g><g transform="translate(1330,160)">
+    <rect width="420" height="296" rx="12" fill="white" stroke="#bfd2c7" stroke-width="2"/>
+    <path d="M12 0H408Q420 0 420 12V54H0V12Q0 0 12 0" fill="#254e3a"/>
+    <text x="20" y="35" class="title" >users</text>
+    <rect y="54" width="420" height="32" fill="#e9f0eb"/>
+    <text x="16" y="76" class="heading" >KEY</text><text x="82" y="76" class="heading" >COLUMN</text><text x="245" y="76" class="heading" >TYPE</text>
+    <g transform="translate(0,86)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >PK</text><text x="82" y="21" class="field" >id</text><text x="245" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,116)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >name</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,146)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >UK</text><text x="82" y="21" class="field" >email</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,176)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >password_hash</text><text x="245" y="21" class="type" >text</text>
+    </g><g transform="translate(0,206)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >role</text><text x="245" y="21" class="type" >UserRole</text>
+    </g><g transform="translate(0,236)">
+      
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >created_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g><g transform="translate(0,266)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >updated_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g>
+  </g><g transform="translate(1330,720)">
+    <rect width="420" height="176" rx="12" fill="white" stroke="#bfd2c7" stroke-width="2"/>
+    <path d="M12 0H408Q420 0 420 12V54H0V12Q0 0 12 0" fill="#254e3a"/>
+    <text x="20" y="35" class="title" >saved_products</text>
+    <rect y="54" width="420" height="32" fill="#e9f0eb"/>
+    <text x="16" y="76" class="heading" >KEY</text><text x="82" y="76" class="heading" >COLUMN</text><text x="245" y="76" class="heading" >TYPE</text>
+    <g transform="translate(0,86)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" >PK,FK</text><text x="82" y="21" class="field" >user_id</text><text x="245" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,116)">
+      
+      <text x="16" y="21" class="key" >PK,FK</text><text x="82" y="21" class="field" >product_id</text><text x="245" y="21" class="type" >uuid</text>
+    </g><g transform="translate(0,146)">
+      <rect x="1" width="418" height="30" fill="#f5f8f5"/>
+      <text x="16" y="21" class="key" ></text><text x="82" y="21" class="field" >saved_at</text><text x="245" y="21" class="type" >timestamp</text>
+    </g>
+  </g>
+  <rect x="50" y="968" width="1700" height="122" rx="10" fill="#e9f0eb"/>
+  <text x="72" y="998" class="note" >PK = primary key    FK = foreign key    UK = unique    ? = nullable    1 → 0..* = one to zero or many</text>
+  <text x="72" y="1025" class="note" >UserRole: USER, ADMIN    |    ProductAvailability: IN_STOCK, OUT_OF_STOCK, PREORDER</text>
+  <text x="72" y="1052" class="note" >saved_products uses composite PK (user_id, product_id). Deleting a user or product cascades to its saved entries.</text>
+  <text x="72" y="1079" class="note" >Deleting referenced vendors/categories is restricted. No database tables or columns were renamed.</text>
+</svg>

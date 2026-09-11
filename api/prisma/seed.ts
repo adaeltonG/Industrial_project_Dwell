@@ -58,6 +58,7 @@ const additionalProducts = [
 }));
 
 async function main() {
+  const publicSiteUrl = (process.env.PUBLIC_SITE_URL ?? "http://localhost:3000/dwell").replace(/\/$/, "");
   const categoryIds = new Map<string, string>();
   for (const category of categories) {
     const record = await prisma.category.upsert({ where: { slug: category.slug }, update: {}, create: category });
@@ -72,18 +73,32 @@ async function main() {
 
   for (const product of [...products, ...additionalProducts]) {
     const { vendor, category, ...fields } = product;
+    const imageUrl = `${publicSiteUrl}/images/products/${product.slug}.png`;
     const data = {
       ...fields,
       currency: "GBP",
       availability: ProductAvailability.IN_STOCK,
       externalUrl: `https://example.com/products/${product.slug}`,
-      imageUrl: products.some((item) => item.slug === product.slug)
-        ? `${process.env.PUBLIC_SITE_URL ?? "http://localhost:3000/dwell"}/images/products/${product.slug}.png`
-        : `https://placehold.co/640x480/f1f3ec/344538/png?text=${encodeURIComponent(product.title)}`,
+      imageUrl,
       vendorId: vendorIds.get(vendor)!,
       categoryId: categoryIds.get(category)!
     };
     await prisma.product.upsert({ where: { slug: product.slug }, update: {}, create: data });
+    // Backfill only missing/bootstrap imagery, preserving administrator-supplied images
+    // and every other field on records that already exist.
+    await prisma.product.updateMany({
+      where: {
+        slug: product.slug,
+        OR: [
+          { imageUrl: null },
+          { imageUrl: `https://placehold.co/640x480/f1f3ec/344538/png?text=${encodeURIComponent(product.title)}` },
+          ...(publicSiteUrl !== "http://localhost:3000/dwell"
+            ? [{ imageUrl: `http://localhost:3000/dwell/images/products/${product.slug}.png` }]
+            : [])
+        ]
+      },
+      data: { imageUrl }
+    });
   }
 
   const email = (process.env.ADMIN_EMAIL ?? "admin@dwell.local").toLowerCase();

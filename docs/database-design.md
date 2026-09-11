@@ -2,6 +2,10 @@
 
 The PostgreSQL schema is defined in [`../api/prisma/schema.prisma`](../api/prisma/schema.prisma), with executable SQL in `api/prisma/migrations/20260825184000_init/migration.sql`.
 
+Download the **[PNG ER diagram](database-erd.png)** (3600 × 2240 pixels). An [SVG version](database-erd.svg) is also available. Regenerate both from the current Prisma schema with `npm run docs:erd`.
+
+![Dwell database entity relationship diagram](database-erd.png)
+
 ```mermaid
 erDiagram
     vendors ||--o{ products : supplies
@@ -68,6 +72,6 @@ Each product belongs to exactly one vendor and category. Each may have zero or m
 
 ## Seed data
 
-`npm run prisma:seed` in `api` supplies 30 distinct demonstration products, five vendors and four categories. These are fictional examples; external links use example.com and added inventory uses labelled placeholder images. The original seven products have bundled images. Set `PUBLIC_SITE_URL` to the public frontend URL including `/dwell` when seeding a new deployment.
+`npm run prisma:seed` in `api` supplies 30 distinct demonstration products, five vendors and four categories. These are fictional examples; external links use example.com. All 30 products have distinct bundled images. The 23 added products use 12 generated images and 11 downloaded stock photographs; sources and generation prompts are recorded in [the image directory](../public/images/products/README.md). Set `PUBLIC_SITE_URL` to the public frontend URL including `/dwell` when seeding a new deployment.
 
-Seeding only inserts missing slugs and preserves existing records, UUIDs, relationships and credentials. An initial administrator is created only if its email is absent and `ADMIN_PASSWORD` is explicitly supplied with at least 12 characters. The catalogue is still seeded when no admin password is supplied. Existing edits are never overwritten by seeding.
+Seeding inserts missing slugs and preserves existing records, UUIDs, relationships and credentials. It backfills missing images, the exact legacy placeholder URLs, and default localhost image URLs when moving to a configured public site. Administrator-supplied image URLs and all other product edits are preserved. An initial administrator is created only if its email is absent and `ADMIN_PASSWORD` is explicitly supplied with at least 12 characters. The catalogue is still seeded when no admin password is supplied.
