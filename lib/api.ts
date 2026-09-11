@@ -101,6 +101,16 @@ export function formatPrice(price: string, currency = "GBP") {
   }).format(Number(price));
 }
 
+// Admin must also show inventory beyond the API's 100-item page limit.
+export async function allProducts(token: string): Promise<Product[]> {
+  const products: Product[] = [];
+  for (let page = 1; ; page++) {
+    const items = await apiRequest<Product[]>(`/products?limit=100&page=${page}`, { token });
+    products.push(...items);
+    if (items.length < 100) return products;
+  }
+}
+
 export function availabilityLabel(value: Product["availability"]) {
   return value === "IN_STOCK" ? "In stock" : value === "PREORDER" ? "Pre-order" : "Out of stock";
 }

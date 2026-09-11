@@ -22,13 +22,12 @@ export function ProductCard({ product, variant = "catalog" }: ProductCardProps) 
           <span className="desktop-title">{product.title}</span>
           <span className="mobile-title">{product.shortTitle}</span>
         </h3>
-        {variant === "catalog" ? (
-          <p className="product-card__vendor">{product.vendor.name}</p>
-        ) : null}
+        <p className="product-card__vendor">{product.vendor.name}</p>
+        <p className="product-card__category">{product.category.name}</p>
         <div className="product-card__footer">
           <p className="price">{formatPrice(product.price, product.currency)}</p>
           <Link href={`/products/${product.slug}`} className="btn btn--outline btn--small">
-            View
+            View details
           </Link>
         </div>
         <button type="button" className="btn btn--primary product-card__add" disabled={!ready || product.availability === "OUT_OF_STOCK"} onClick={() => setFeedback(addItem(product) ?? "Added to cart.")}>{product.availability === "OUT_OF_STOCK" ? "Out of stock" : "Add to cart"}</button>

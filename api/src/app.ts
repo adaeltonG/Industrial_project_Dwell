@@ -20,11 +20,14 @@ export function createApp() {
   if (config.NODE_ENV !== "test") app.use(morgan("dev"));
 
   app.get("/health", (_req, res) => res.json({ data: { status: "ok" } }));
-  app.use("/api/v1/auth", authRouter);
-  app.use("/api/v1/categories", categoriesRouter);
-  app.use("/api/v1/vendors", vendorsRouter);
-  app.use("/api/v1/products", productsRouter);
-  app.use("/api/v1/users", usersRouter);
+  // Keep the deployed v1 URLs while supporting the specification's /api URLs.
+  for (const prefix of ["/api/v1", "/api"]) {
+    app.use(`${prefix}/auth`, authRouter);
+    app.use(`${prefix}/categories`, categoriesRouter);
+    app.use(`${prefix}/vendors`, vendorsRouter);
+    app.use(`${prefix}/products`, productsRouter);
+    app.use(`${prefix}/users`, usersRouter);
+  }
   app.use(notFound);
   app.use(errorHandler);
   return app;

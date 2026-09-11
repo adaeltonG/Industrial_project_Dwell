@@ -689,6 +689,7 @@ h3,
   line-height: 1.2;
 }
 
+.product-card__category,
 .product-card__vendor {
   margin-top: 10px;
   color: var(--color-text-muted);
@@ -1438,8 +1439,11 @@ h3,
     font-size: 20px;
   }
 
+  .product-card__category,
   .product-card__vendor {
-    display: none;
+    margin-top: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
   }
 
   .product-card__footer {

@@ -1,5 +1,6 @@
 import { Prisma, UserRole } from "@prisma/client";
 import { Router } from "express";
+import { z } from "zod";
 import { prisma } from "../../db.js";
 import { ApiError } from "../../lib/api-error.js";
 import { serializeProduct } from "../../lib/serializers.js";
@@ -31,7 +32,7 @@ productsRouter.get("/", validate({ query: productListQuery }), async (req, res) 
     sort === "price_desc" ? { price: "desc" } :
     sort === "title_asc" ? { title: "asc" } : { createdAt: "desc" };
   const [items, total] = await prisma.$transaction([
-    prisma.product.findMany({ where, orderBy, skip: (page - 1) * limit, take: limit, include: { vendor: true, category: true } }),
+    prisma.product.findMany({ where, orderBy: [orderBy, { id: "asc" }], skip: (page - 1) * limit, take: limit, include: { vendor: true, category: true } }),
     prisma.product.count({ where })
   ]);
   res.json({
@@ -41,7 +42,8 @@ productsRouter.get("/", validate({ query: productListQuery }), async (req, res) 
 });
 
 productsRouter.get("/:slug", validate({ params: slugParams }), async (req, res) => {
-  const product = await prisma.product.findUnique({ where: { slug: String(req.params.slug) }, include: { vendor: true, category: true } });
+  const identifier = String(req.params.slug);
+  const product = await prisma.product.findUnique({ where: z.uuid().safeParse(identifier).success ? { id: identifier } : { slug: identifier }, include: { vendor: true, category: true } });
   if (!product) throw new ApiError(404, "NOT_FOUND", "Product not found");
   res.json({ data: serializeProduct(product) });
 });
@@ -49,6 +51,11 @@ productsRouter.get("/:slug", validate({ params: slugParams }), async (req, res) 
 productsRouter.post("/", authenticate, requireRole(UserRole.ADMIN), validate({ body: productInput }), async (req, res) => {
   const product = await prisma.product.create({ data: req.body, include: { vendor: true, category: true } });
   res.status(201).location(`/api/v1/products/${product.slug}`).json({ data: serializeProduct(product) });
+});
+
+productsRouter.put("/:id", authenticate, requireRole(UserRole.ADMIN), validate({ params: idParams, body: productInput }), async (req, res) => {
+  const product = await prisma.product.update({ where: { id: String(req.params.id) }, data: req.body, include: { vendor: true, category: true } });
+  res.json({ data: serializeProduct(product) });
 });
 
 productsRouter.patch("/:id", authenticate, requireRole(UserRole.ADMIN), validate({ params: idParams, body: productUpdate }), async (req, res) => {

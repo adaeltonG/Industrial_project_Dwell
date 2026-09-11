@@ -18,8 +18,9 @@ vendorsRouter.get("/", async (_req, res) => {
 });
 
 vendorsRouter.get("/:slug", validate({ params: slugParams }), async (req, res) => {
+  const identifier = String(req.params.slug);
   const vendor = await prisma.vendor.findUnique({
-    where: { slug: String(req.params.slug) },
+    where: z.uuid().safeParse(identifier).success ? { id: identifier } : { slug: identifier },
     include: { products: { include: { vendor: true, category: true }, orderBy: { createdAt: "desc" } } }
   });
   if (!vendor) throw new ApiError(404, "NOT_FOUND", "Vendor not found");
