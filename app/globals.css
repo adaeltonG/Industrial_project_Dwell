@@ -383,6 +383,15 @@ h3,
   min-height: 122px;
 }
 
+.category-card__image img {
+  object-position: center 48%;
+  transition: transform 220ms ease;
+}
+
+.category-card:hover .category-card__image img {
+  transform: scale(1.035);
+}
+
 .category-card h3 {
   margin-top: 13px;
   font-size: 20px;
