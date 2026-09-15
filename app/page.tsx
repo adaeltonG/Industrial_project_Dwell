@@ -4,15 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { apiRequest, type Category } from "@/lib/api";
 import { CategoryCard } from "@/components/CategoryCard";
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SearchBar } from "@/components/SearchBar";
-
-const reasons = [
-  "Every vendor is verified before their products are listed on the platform.",
-  "Transparent pricing with no hidden markup - you pay the vendor's own price.",
-  "Search, filter and compare across vendors before you click through to buy."
-];
 
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -58,19 +51,7 @@ export default function HomePage() {
           {!error && categories.length === 0 ? <p className="empty-note">Loading categories…</p> : null}
         </section>
 
-        <section className="trust-panel" id="about">
-          <h2>Why shop with Dwell</h2>
-          <ul>
-            {reasons.map((reason) => (
-              <li key={reason}>
-                <span aria-hidden="true" />
-                <p>{reason}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
       </main>
-      <Footer />
     </>
   );
 }
