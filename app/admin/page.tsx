@@ -31,18 +31,19 @@ export default function AdminPage() {
   const loadData = useCallback(async () => {
     if (!token) return;
     const [productData, vendorData, categoryData] = await Promise.all([
-      allProducts(token),
+      allProducts(token, user?.role === "VENDOR" ? user.vendor?.slug : undefined),
       apiRequest<Vendor[]>("/vendors", { token }),
       apiRequest<Category[]>("/categories", { token })
     ]);
-    setProducts(productData); setVendors(vendorData); setCategories(categoryData);
-    setForm((current) => ({ ...current, vendorId: current.vendorId || vendorData[0]?.id || "", categoryId: current.categoryId || categoryData[0]?.id || "" }));
-  }, [token]);
+    const availableVendors = user?.role === "VENDOR" && user.vendor ? [user.vendor] : vendorData;
+    setProducts(productData); setVendors(availableVendors); setCategories(categoryData);
+    setForm((current) => ({ ...current, vendorId: current.vendorId || availableVendors[0]?.id || "", categoryId: current.categoryId || categoryData[0]?.id || "" }));
+  }, [token, user]);
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) { router.replace("/login"); return; }
-    if (user.role !== "ADMIN") { router.replace("/products"); return; }
+    if (user.role !== "ADMIN" && user.role !== "VENDOR") { router.replace("/products"); return; }
     loadData().catch((reason) => setError(reason instanceof Error ? reason.message : "Could not load admin data"));
   }, [authLoading, loadData, router, user]);
 
@@ -78,10 +79,10 @@ export default function AdminPage() {
   }
 
   function signOut() { logout(); router.push("/"); }
-  if (authLoading || !user || user.role !== "ADMIN") return <main className="page"><p>Checking administrator access…</p></main>;
+  if (authLoading || !user || (user.role !== "ADMIN" && user.role !== "VENDOR")) return <main className="page"><p>Checking management access…</p></main>;
 
   return <main className="admin-page">
-    <header className="admin-header"><Wordmark admin light /><nav aria-label="Admin actions">
+    <header className="admin-header"><Wordmark admin={user.role === "ADMIN"} light /><nav aria-label="Product management actions">
       <button className="btn btn--secondary" type="button" onClick={() => { resetForm(); formRef.current?.scrollIntoView({ behavior: "smooth" }); }}><Plus aria-hidden="true" size={19} />Add product</button>
       <button className="btn btn--outline btn--light" type="button" onClick={signOut}>Log out</button>
     </nav></header>
@@ -96,7 +97,7 @@ export default function AdminPage() {
           <label>Short title<input value={form.shortTitle} onChange={(e) => updateField("shortTitle", e.target.value)} type="text" minLength={2} maxLength={100} required /></label>
           <label>Category<select aria-label="Category" value={form.categoryId} onChange={(e) => updateField("categoryId", e.target.value)} required>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
           <label>Price<input value={form.price} onChange={(e) => updateField("price", e.target.value)} type="number" min="0.01" step="0.01" required /></label>
-          <label>Vendor<select aria-label="Vendor" value={form.vendorId} onChange={(e) => updateField("vendorId", e.target.value)} required>{vendors.map((vendor) => <option key={vendor.id} value={vendor.id}>{vendor.name}</option>)}</select></label>
+          <label>Vendor<select aria-label="Vendor" value={form.vendorId} onChange={(e) => updateField("vendorId", e.target.value)} disabled={user.role === "VENDOR"} required>{vendors.map((vendor) => <option key={vendor.id} value={vendor.id}>{vendor.name}</option>)}</select></label>
           <label>Image URL<input value={form.imageUrl} onChange={(e) => updateField("imageUrl", e.target.value)} type="url" placeholder="https://..." /></label>
           <label>External product URL<input value={form.externalUrl} onChange={(e) => updateField("externalUrl", e.target.value)} type="url" placeholder="https://..." required /></label>
           <label>Availability<select aria-label="Availability" value={form.availability} onChange={(e) => updateField("availability", e.target.value as Product["availability"])}><option value="IN_STOCK">In stock</option><option value="PREORDER">Pre-order</option><option value="OUT_OF_STOCK">Out of stock</option></select></label>

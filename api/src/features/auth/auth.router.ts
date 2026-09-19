@@ -17,7 +17,7 @@ authRouter.post("/login", validate({ body: loginSchema }), async (req, res) => {
 });
 
 authRouter.get("/me", authenticate, async (req, res) => {
-  const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+  const user = await prisma.user.findUnique({ where: { id: req.user!.id }, include: { vendor: true } });
   if (!user) throw new ApiError(404, "NOT_FOUND", "User not found");
   res.json({ data: publicUser(user) });
 });

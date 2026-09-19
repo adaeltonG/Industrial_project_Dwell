@@ -5,7 +5,7 @@ import { config } from "../../config.js";
 import { prisma } from "../../db.js";
 import { ApiError } from "../../lib/api-error.js";
 
-export function publicUser(user: User) {
+export function publicUser<T extends User & { vendor?: unknown }>(user: T) {
   const { passwordHash: _passwordHash, ...safeUser } = user;
   return safeUser;
 }
@@ -26,7 +26,7 @@ export async function register(input: { name: string; email: string; password: s
 }
 
 export async function login(input: { email: string; password: string }) {
-  const user = await prisma.user.findUnique({ where: { email: input.email } });
+  const user = await prisma.user.findUnique({ where: { email: input.email }, include: { vendor: true } });
   if (!user || !(await bcrypt.compare(input.password, user.passwordHash))) {
     throw new ApiError(401, "INVALID_CREDENTIALS", "Email or password is incorrect");
   }

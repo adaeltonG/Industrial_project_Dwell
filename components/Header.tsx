@@ -33,7 +33,7 @@ export function Header({
 
   const accountActions = user ? (
     <>
-      {user.role === "ADMIN" ? <Link href="/admin" className="btn btn--outline">Admin</Link> : null}
+      {user.role === "ADMIN" || user.role === "VENDOR" ? <Link href="/admin" className="btn btn--outline">Manage</Link> : null}
       <button className="btn btn--primary" type="button" onClick={signOut}>Log out</button>
     </>
   ) : loading ? null : <Link href="/login" className="btn btn--primary">Log in</Link>;
@@ -74,7 +74,7 @@ export function Header({
         <nav className="mobile-menu" aria-label="Mobile navigation">
           <Link href="/products" onClick={() => setMenuOpen(false)}>Products</Link>
           <Link href="/vendors" onClick={() => setMenuOpen(false)}>Vendors</Link>
-          {user?.role === "ADMIN" ? <Link href="/admin">Admin</Link> : null}
+          {user?.role === "ADMIN" || user?.role === "VENDOR" ? <Link href="/admin">Manage products</Link> : null}
           {user ? <button type="button" onClick={signOut}>Log out</button> : <Link href="/login">Log in</Link>}
         </nav>
       ) : null}

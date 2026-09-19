@@ -4,7 +4,9 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  role: "USER" | "ADMIN";
+  role: "USER" | "VENDOR" | "ADMIN";
+  vendorId?: string | null;
+  vendor?: Vendor | null;
 };
 
 export type Vendor = {
@@ -102,10 +104,10 @@ export function formatPrice(price: string, currency = "GBP") {
 }
 
 // Admin must also show inventory beyond the API's 100-item page limit.
-export async function allProducts(token: string): Promise<Product[]> {
+export async function allProducts(token: string, vendor?: string): Promise<Product[]> {
   const products: Product[] = [];
   for (let page = 1; ; page++) {
-    const items = await apiRequest<Product[]>(`/products?limit=100&page=${page}`, { token });
+    const items = await apiRequest<Product[]>(`/products?limit=100&page=${page}${vendor ? `&vendor=${encodeURIComponent(vendor)}` : ""}`, { token });
     products.push(...items);
     if (items.length < 100) return products;
   }

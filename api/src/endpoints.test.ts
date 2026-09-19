@@ -73,6 +73,17 @@ describe.each(["/api", "/api/v1"])("%s API compatibility", (prefix) => {
       expect(result.status).toBe(status);
     }
   });
+  it("allows a vendor to manage only products in its own catalogue", async () => {
+    db.user.findUnique.mockResolvedValue({ vendorId });
+    db.product.findUnique.mockResolvedValue({ vendorId });
+    db.product.create.mockResolvedValue(product); db.product.update.mockResolvedValue(product); db.product.delete.mockResolvedValue(product);
+    const vendorToken = token("VENDOR");
+    expect((await request(app).post(`${prefix}/products`).set("Authorization", `Bearer ${vendorToken}`).send(input)).status).toBe(201);
+    expect((await request(app).put(`${prefix}/products/${id}`).set("Authorization", `Bearer ${vendorToken}`).send(input)).status).toBe(200);
+    expect((await request(app).delete(`${prefix}/products/${id}`).set("Authorization", `Bearer ${vendorToken}`)).status).toBe(204);
+    db.product.findUnique.mockResolvedValue({ vendorId: "40000000-0000-4000-8000-000000000001" });
+    expect((await request(app).delete(`${prefix}/products/${id}`).set("Authorization", `Bearer ${vendorToken}`)).status).toBe(403);
+  });
   it("requires a complete PUT body but supports partial PATCH", async () => {
     db.product.update.mockResolvedValue(product);
     expect((await request(app).put(`${prefix}/products/${id}`).set("Authorization", `Bearer ${token()}`).send({ price: 30 })).status).toBe(400);

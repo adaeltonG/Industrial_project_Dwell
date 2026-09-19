@@ -9,6 +9,7 @@ datasource db {
 
 enum UserRole {
   USER
+  VENDOR
   ADMIN
 }
 
@@ -24,6 +25,8 @@ model User {
   email         String         @unique
   passwordHash  String         @map("password_hash")
   role          UserRole       @default(USER)
+  vendorId      String?        @unique @db.Uuid @map("vendor_id")
+  vendor        Vendor?        @relation(fields: [vendorId], references: [id], onDelete: SetNull)
   savedProducts SavedProduct[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
@@ -40,6 +43,7 @@ model Vendor {
   logoUrl       String?   @map("logo_url")
   verifiedSince DateTime? @db.Date @map("verified_since")
   products      Product[]
+  account       User?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 

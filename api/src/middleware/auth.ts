@@ -30,3 +30,12 @@ export function requireRole(role: UserRole) {
     next();
   };
 }
+
+export function requireAnyRole(...roles: UserRole[]) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      throw new ApiError(403, "FORBIDDEN", "You do not have permission for this action");
+    }
+    next();
+  };
+}

@@ -19,7 +19,7 @@ export default function LoginPage() {
     const form = new FormData(event.currentTarget);
     try {
       const user = await login(String(form.get("email")), String(form.get("password")));
-      router.push(user.role === "ADMIN" ? "/admin" : "/products");
+      router.push(user.role === "ADMIN" || user.role === "VENDOR" ? "/admin" : "/products");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Login failed");
     } finally {
